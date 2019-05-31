@@ -4,6 +4,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+.listtable {
+	border-collapse:collapse;
+}
+.listtable > thead > tr > th, td {
+	padding:10px;
+}
+</style>
 <meta charset="UTF-8">
 <title>게시물 리스트</title>
 </head>
@@ -19,7 +27,7 @@
 	<% 
 		if(articles.size() > 0){
 		%>
-	<table border=5>
+	<table border=5 class="listtable">
 		<thead>
 			<tr>
 				<th>번호</th>

@@ -6,35 +6,47 @@
 <html>
 <head>
 <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+	
 </script>
 <meta charset="UTF-8">
 <style>
-.article-reply-list > tbody > tr .edit-mode-visible {
-    display:none;
+.listtable {
+	border-collapse:collapse;
+}
+.listtable > thead > tr > th, td {
+	padding:10px;
+}
+.article-reply-list {
+	border-collapse:collapse;
+}
+.article-reply-list > thead > tr > th, td {
+	padding:10px;
+}
+.article-reply-list>tbody>tr .edit-mode-visible {
+	display: none;
 }
 
-.article-reply-list > tbody > tr.edit-mode .edit-mode-visible {
-    display:block;
+.article-reply-list>tbody>tr.edit-mode .edit-mode-visible {
+	display: block;
 }
 
-.article-reply-list > tbody > tr.edit-mode .read-mode-visible {
-    display:none;
+.article-reply-list>tbody>tr.edit-mode .read-mode-visible {
+	display: none;
 }
 </style>
 <script>
+	function enableEditMode(el) {
+		var $el = $(el);
+		var $tr = $el.closest('tr');
+		$tr.addClass('edit-mode');
+	}
 
-    function enableEditMode(el) {
-        var $el = $(el);
-        var $tr = $el.closest('tr');
-        $tr.addClass('edit-mode');
-    }
-
-    function disableEditMode(el) {
-        var $el = $(el);
-        var $tr = $el.closest('tr');
-        $tr.removeClass('edit-mode');
-    }
+	function disableEditMode(el) {
+		var $el = $(el);
+		var $tr = $el.closest('tr');
+		$tr.removeClass('edit-mode');
+	}
 </script>
 <title>게시물 상세보기</title>
 </head>
@@ -51,7 +63,7 @@
 			onclick="return confirm('진짜로 <%=article.get("id")%>번 글을 삭제할 것입니까??')">글삭제</a>
 	</div>
 	<br>
-	<table border=5>
+	<table border=5 class="listtable">
 		<tr>
 			<th>번호</th>
 			<td><%=article.get("id")%></td>
@@ -73,7 +85,7 @@
 	<%
 		if (articleReplies.size() > 0) {
 	%>
-	<table class="article-reply-list" border=5 >
+	<table class="article-reply-list" border=5>
 		<thead>
 			<tr>
 				<th>번호</th>
@@ -88,30 +100,31 @@
 						Map<String, Object> articleReply = articleReplies.get(i);
 			%>
 			<tr>
-					<td><%=articleReply.get("id")%></td>
-					<td><%=articleReply.get("regDate").toString().substring(0, 19)%></td>
-					<td>
-						<div class="read-mode-visible">
-							<%=articleReply.get("body")%>
-						</div>
-						<div class="edit-mode-visible">
-							<form action="./doModifyReply.sbs">
-								<input type="hidden" name="id" value="<%=articleReply.get("id")%>">
-								<div>
-									<textarea name="body"><%=articleReply.get("body")%></textarea>
-								</div>
-								<div>
-									<input type="submit" value="댓글수정"> <input
-										onclick="disableEditMode(this);" type="reset" value="수정취소">
-								</div>
-							</form>
-						</div>
-					</td>
-					<td>
-						<a href="./doDeleteReply.sbs?id=<%=articleReply.get("id")%>" onclick="return confirm('진짜진짜로 댓글을 삭제합니까?!')">삭제</a>
-                   	 	<a class="read-mode-visible" href="javascript:;"
-                   		 onclick="enableEditMode(this);">수정</a>
-					</td>
+				<td><%=articleReply.get("id")%></td>
+				<td><%=articleReply.get("regDate").toString().substring(0, 19)%></td>
+				<td>
+					<div class="read-mode-visible">
+						<%=articleReply.get("body")%>
+					</div>
+					<div class="edit-mode-visible">
+						<form action="./doModifyReply.sbs">
+							<input type="hidden" name="id"
+								value="<%=articleReply.get("id")%>">
+							<div>
+								<textarea name="body"><%=articleReply.get("body")%></textarea>
+							</div>
+							<div>
+								<input type="submit" value="댓글수정"> <input
+									onclick="disableEditMode(this);" type="reset" value="수정취소">
+							</div>
+						</form>
+					</div>
+				</td>
+				<td><a
+					href="./doDeleteReply.sbs?id=<%=articleReply.get("id")%>"
+					onclick="return confirm('진짜진짜로 댓글을 삭제합니까?!')">삭제</a> <a
+					class="read-mode-visible" href="javascript:;"
+					onclick="enableEditMode(this);">수정</a></td>
 			</tr>
 		</tbody>
 		<%

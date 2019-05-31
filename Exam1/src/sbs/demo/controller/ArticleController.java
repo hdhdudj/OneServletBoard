@@ -69,6 +69,21 @@ public class ArticleController {
 	public void _doAdd(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String title = request.getParameter("title");
 		String body = request.getParameter("body");
+		String passwd = request.getParameter("passwd");
+		
+		if (passwd == null) {
+			response.getWriter().append("<script> alert('비번을 입력해주세요.'); history.back(); </script>");
+			return;
+		}
+
+		passwd = passwd.trim();
+
+		if (passwd.length() == 0) {
+			response.getWriter().append("<script> alert('비번을 입력해주세요.'); history.back(); </script>");
+			return;
+		}
+
+		passwd = passwd.replaceAll("\'", "\\\\'");
 		
 		if (title == null) {
 			response.getWriter().append("<script> alert('제목을 입력해주세요.'); history.back(); </script>");
@@ -99,7 +114,7 @@ public class ArticleController {
 		body = body.replaceAll("\'", "\\\\'");
 		
 		int id = dbLink.getRowIntValue("SELECT MAX(id) FROM article");
-		String sql = "INSERT INTO article SET regDate=NOW(), id='"+(id+1)+"', title ='"+title+"', body='"+body+"';";
+		String sql = "INSERT INTO article SET regDate=NOW(), id='"+(id+1)+"', title ='"+title+"', body='"+body+"', passWd='"+passwd+"';";
 		dbLink.executeQuery(sql);
 		
 		response.getWriter().append("<script>alert('게시물이 작성되었습니다.')</script>");
@@ -128,8 +143,10 @@ public class ArticleController {
 			response.getWriter().append("<script> alert('id를 0보다 큰 숫자로 입력해주세요.'); history.back(); </script>");
 			return;
 		}
-		
-		String sql = "DELETE FROM article WHERE id='"+id+"';";
+		String sql = "SELECT passwd FROM article WHERE id='"+id+"';";
+		String passwd = (String)dbLink.getRowValue(sql);
+
+		sql = "DELETE FROM article WHERE id='"+id+"';";
 		dbLink.executeQuery(sql);
 		sql = "DELETE FROM articleReply WHERE articleId='"+id+"';";
 		dbLink.executeQuery(sql);				

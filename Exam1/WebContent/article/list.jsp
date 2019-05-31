@@ -4,6 +4,19 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+</script>
+<script>
+function deleteOnclick(el){
+	var $el = $(el);    
+    var $div = $el.closest('div');
+    $div.addClass('.popup');	
+	$('.popup').css('display','block');
+};
+function deleteOnclickdelete(){
+	$('.popup').css('display','none');
+};
+</script>
 <style>
 .listtable {
 	border-collapse:collapse;
@@ -11,6 +24,20 @@
 .listtable > thead > tr > th, td {
 	padding:10px;
 }
+
+.listtable > tbody > form > div {
+	top:50%;
+	left:50%;
+	transform:translateX(-50%) translateY(-50%);
+	background-color:red;
+	border:2px solid black;
+	position:fixed;
+	display:none;
+}
+div > span >div {
+	padding:10px;
+}
+
 </style>
 <meta charset="UTF-8">
 <title>게시물 리스트</title>
@@ -43,8 +70,24 @@
 				<td><%=article.get("id")%></td>
 				<td><%=article.get("regDate").toString().substring(0,19)%></td>
 				<td><a href="./detail.sbs?id=<%=article.get("id")%>"><%=article.get("title")%></a></td>
-				<td><a href="./doDelete.sbs?id=<%=article.get("id")%>" onclick="return confirm('렬루 <%=article.get("id")%>번 게시물을 삭제하시겠습니까?!')">삭제</a></td>
+				<td><a href="javascript:;" onclick="deleteOnclick(this);">삭제</a></td>
 			</tr>
+			<form action="./doDelete.sbs" method="POST">
+					<div>
+						<span>
+							<div>
+								<%=article.get("id")%>번 게시물을 삭제하실?
+							</div>
+							<div>
+								비번 : <input type="password" name="passwd">
+							</div>
+							<div>
+								<button type="submit">입력</button>
+								<input type="button" onclick="javascript:deleteOnclickdelete();" value="취소">
+							</div>
+						</span>
+					</div>
+			</form>
 		</tbody>
 		<% } %>
 	</table>

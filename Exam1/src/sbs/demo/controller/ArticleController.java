@@ -131,6 +131,8 @@ public class ArticleController {
 		
 		String sql = "DELETE FROM article WHERE id='"+id+"';";
 		dbLink.executeQuery(sql);
+		sql = "DELETE FROM articleReply WHERE articleId='"+id+"';";
+		dbLink.executeQuery(sql);				
 		
 		response.getWriter().append("<script>alert('"+id+"번 게시물을 삭제하였습니다.')</script>");
 		response.getWriter().append("<script>location.replace('./list.sbs')</script>");

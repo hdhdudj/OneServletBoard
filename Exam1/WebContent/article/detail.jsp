@@ -11,18 +11,42 @@
 </script>
 <meta charset="UTF-8">
 <style>
+.popup-bg {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: none;
+}
+
+.popup, .popup-reply, .popup-modify {
+	top: 50%; 
+	left : 50%; 
+	transform : translateX( -50%) translateY( -50%);
+	background-color : red; 
+	border : 2px solid black; 
+	position : fixed;
+	display: none;
+}
+
 .listtable {
-	border-collapse:collapse;
+	border-collapse: collapse;
 }
-.listtable > thead > tr > th, td {
-	padding:10px;
+
+.listtable>thead>tr>th, td {
+	padding: 10px;
 }
+
 .article-reply-list {
-	border-collapse:collapse;
+	border-collapse: collapse;
 }
-.article-reply-list > thead > tr > th, td {
-	padding:10px;
+
+.article-reply-list>thead>tr>th, td {
+	padding: 10px;
 }
+
 .article-reply-list>tbody>tr .edit-mode-visible {
 	display: none;
 }
@@ -34,8 +58,31 @@
 .article-reply-list>tbody>tr.edit-mode .read-mode-visible {
 	display: none;
 }
+.popup div, .popup-reply div, .popup-modify div {
+	padding:10px;
+}
 </style>
 <script>
+	function onclickDelete1() {
+		$('.popup,.popup-bg').css('display', 'block');
+	}
+	function enableEditModepw(el){
+		var el = String(el);
+		var el2 = '.popup-modify.';
+		var el3 = el2.concat(el);
+		$(el3).css('display', 'block');
+		$('.popup-bg').css('display', 'block');
+	}
+	function onclickDelete(el) {
+		var el = String(el);
+		var el2 = '.popup-reply.';
+		var el3 = el2.concat(el);
+		$(el3).css('display', 'block');
+		$('.popup-bg').css('display', 'block');
+	}
+	function onclickDeleteCancel() {
+		$('.popup,.popup-bg,.popup-reply,.popup-modify').css('display', 'none');
+	}
 	function enableEditMode(el) {
 		var $el = $(el);
 		var $tr = $el.closest('tr');
@@ -59,8 +106,7 @@
 	<div>
 		<a href="./list.sbs">글목록</a> <a href="./add.jsp">글작성</a> <a
 			href="./modify.jsp?id=<%=article.get("id")%>">글수정</a> <a
-			href="./doDelete.sbs?id=<%=article.get("id")%>"
-			onclick="return confirm('진짜로 <%=article.get("id")%>번 글을 삭제할 것입니까??')">글삭제</a>
+			href="javascript:;" onclick="onclickDelete1();">글삭제</a>
 	</div>
 	<br>
 	<table border=5 class="listtable">
@@ -81,6 +127,25 @@
 			<td><%=article.get("body")%></td>
 		</tr>
 	</table>
+	<div class="popup-bg"></div>
+	<div class="popup">
+		<form action="./doDelete.sbs" method="POST">
+			<div>
+				<%=article.get("id")%>번 글을 삭제하실?!
+			</div>
+			<div>
+				비번 : <input type="password" name="passwd">
+			</div>
+			<div>
+				<input type="hidden" name="id" value="<%=article.get("id")%>">
+			</div>
+			<div>
+				<button type="submit">입력</button>
+				<input type="button" onclick="javascript:onclickDeleteCancel();"
+					value="취소">
+			</div>
+		</form>
+	</div>
 	<h2>댓글</h2>
 	<%
 		if (articleReplies.size() > 0) {
@@ -120,12 +185,44 @@
 						</form>
 					</div>
 				</td>
-				<td><a
-					href="./doDeleteReply.sbs?id=<%=articleReply.get("id")%>"
-					onclick="return confirm('진짜진짜로 댓글을 삭제합니까?!')">삭제</a> <a
-					class="read-mode-visible" href="javascript:;"
-					onclick="enableEditMode(this);">수정</a></td>
+				<td><a href="javascript:;" onclick="onclickDelete(<%=articleReply.get("id")%>)">삭제</a> 
+					<a class="read-mode-visible" href="javascript:;" onclick="enableEditModepw(<%=articleReply.get("id")%>);">수정</a>
+				</td>
 			</tr>
+			<div class="popup-reply <%=articleReply.get("id")%>">
+				<form action="./doDeleteReply.sbs" method="POST">
+					<div>
+						<%=articleReply.get("id")%>번 댓글 삭제하실?
+					</div>
+					<div>
+						<input type="hidden" name="id" value="<%=articleReply.get("id")%>">
+					</div>
+					<div>
+						비번 : <input type="password" name="passwd">
+					</div>
+					<div>
+						<button type="submit">확인</button>
+						<input type="button" onclick="javascript:onclickDeleteCancel();" value="취소">
+					</div>
+				</form>
+			</div>
+			<div class="popup-modify <%=articleReply.get("id")%>">
+				<form action="./doReplyModify.sbs" method="POST">
+					<div>
+						<%=articleReply.get("id")%>번 댓글 수정하실?
+					</div>
+					<div>
+						<input type="hidden" name="id" value="<%=articleReply.get("id")%>">
+					</div>
+					<div>
+						비번 : <input type="password" name="passwd">
+					</div>
+					<div>
+						<button type="submit">확인</button>
+						<input type="button" onclick="javascript:onclickDeleteCancel();" value="취소">
+					</div>
+				</form>
+			</div>
 		</tbody>
 		<%
 			}
@@ -140,6 +237,9 @@
 	%>
 	<h3>댓글쓰기</h3>
 	<form action="./doAddReply.sbs" method="POST">
+		<div>
+			<input type="password" name="passwd" placeholder="비번을 입력하세욤.">
+		</div>
 		<div>
 			<input type="hidden" name="articleid" value="<%=article.get("id")%>">
 		</div>

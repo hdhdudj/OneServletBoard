@@ -69,21 +69,22 @@ public class ArticleController {
 	public void _doAdd(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String title = request.getParameter("title");
 		String body = request.getParameter("body");
+		String writer = request.getParameter("writer");
 		String passwd = request.getParameter("passwd");
-		
-		if (passwd == null) {
-			response.getWriter().append("<script> alert('비번을 입력해주세요.'); history.back(); </script>");
+		 
+		if (writer == null) {
+			response.getWriter().append("<script> alert('글쓴이를 입력해주세요.'); history.back(); </script>");
 			return;
 		}
 
-		passwd = passwd.trim();
+		writer = writer.trim();
 
-		if (passwd.length() == 0) {
-			response.getWriter().append("<script> alert('비번을 입력해주세요.'); history.back(); </script>");
+		if (writer.length() == 0) {
+			response.getWriter().append("<script> alert('글쓴이를 입력해주세요.'); history.back(); </script>");
 			return;
 		}
 
-		passwd = passwd.replaceAll("\'", "\\\\'");
+		writer = writer.replaceAll("\'", "\\\\'");
 		
 		if (title == null) {
 			response.getWriter().append("<script> alert('제목을 입력해주세요.'); history.back(); </script>");
@@ -113,8 +114,23 @@ public class ArticleController {
 
 		body = body.replaceAll("\'", "\\\\'");
 		
+		if (passwd == null) {
+			response.getWriter().append("<script> alert('비번을 입력해주세요.'); history.back(); </script>");
+			return;
+		}
+
+		passwd = passwd.trim();
+
+		if (passwd.length() == 0) {
+			response.getWriter().append("<script> alert('비번을 입력해주세요.'); history.back(); </script>");
+			return;
+		}
+
+		passwd = passwd.replaceAll("\'", "\\\\'");
+		
+		
 		int id = dbLink.getRowIntValue("SELECT MAX(id) FROM article");
-		String sql = "INSERT INTO article SET regDate=NOW(), id='"+(id+1)+"', title ='"+title+"', body='"+body+"', passWd='"+passwd+"';";
+		String sql = "INSERT INTO article SET regDate=NOW(), id='"+(id+1)+"', writer='"+writer+"', title ='"+title+"', body='"+body+"', passWd='"+passwd+"';";
 		dbLink.executeQuery(sql);
 		
 		response.getWriter().append("<script>alert('게시물이 작성되었습니다.')</script>");
@@ -180,6 +196,7 @@ public class ArticleController {
 		String title = request.getParameter("title");
 		String body = request.getParameter("body");
 		String id = request.getParameter("id");
+		String passwd = request.getParameter("passwd");
 		
 		if (title == null) {
 			response.getWriter().append("<script> alert('제목을 입력해주세요.'); history.back(); </script>");
@@ -228,18 +245,43 @@ public class ArticleController {
 			return;
 		}
 		
-		String sql = "UPDATE article SET title='"+title+"', body='"+body+"' WHERE id='"+id+"';";
-		dbLink.executeQuery(sql);
+		if (passwd == null) {
+			response.getWriter().append("<script> alert('비번을 입력해주세요.'); history.back(); </script>");
+			return;
+		}
+
+		passwd = passwd.trim();
+
+		if (passwd.length() == 0) {
+			response.getWriter().append("<script> alert('비번을 입력해주세요.'); history.back(); </script>");
+			return;
+		}
+
+		passwd = passwd.replaceAll("\'", "\\\\'");
 		
-		response.getWriter().append("<script>alert('"+id+"번 게시물이 수정되었습니다.')</script>");
-		response.getWriter().append("<script>location.replace('./detail.sbs?id="+id+"')</script>");
-		return;
+		String sql = "SELECT passWd FROM article WHERE id='"+id+"';";
+		String correctPw = dbLink.getRowStringValue(sql);
+		
+		if(passwd.equals(correctPw)) {
+			sql = "UPDATE article SET title='"+title+"', body='"+body+"' WHERE id='"+id+"';";
+			dbLink.executeQuery(sql);
+			
+			response.getWriter().append("<script>alert('"+id+"번 게시물이 수정되었습니다.')</script>");
+			response.getWriter().append("<script>location.replace('./detail.sbs?id="+id+"')</script>");
+			return;
+			
+		}
+		else {
+			response.getWriter().append("<script>alert('비번이 틀렸습니다 ㅡㅡ'); history.back();</script>");			
+		}
+		
 	}
 	
 	public void _doAddReply(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String body = request.getParameter("body");
 		String articleid = request.getParameter("articleid");
 		String passwd = request.getParameter("passwd");
+		String writer = request.getParameter("writer");
 		
 		if (articleid == null) {
 			response.getWriter().append("<script> alert('id를 입력해주세요.'); history.back(); </script>");
@@ -263,6 +305,19 @@ public class ArticleController {
 		String sql = "SELECT MAX(id) FROM articleReply";
 		int id = dbLink.getRowIntValue(sql);
 		
+		if (writer == null) {
+			response.getWriter().append("<script> alert('글쓴이를 입력해주세요.'); history.back(); </script>");
+			return;
+		}
+
+		writer = writer.trim();
+
+		if (writer.length() == 0) {
+			response.getWriter().append("<script> alert('글쓴이를 입력해주세요.'); history.back(); </script>");
+			return;
+		}
+
+		writer = writer.replaceAll("\'", "\\\\'");
 		
 		if (body == null) {
 			response.getWriter().append("<script> alert('내용을 입력해주세요.'); history.back(); </script>");
@@ -292,7 +347,7 @@ public class ArticleController {
 
 		passwd = passwd.replaceAll("\'", "\\\\'");
 		
-		sql = "INSERT INTO articleReply SET regDate=NOW(), id='"+(id+1)+"', body='"+body+"', articleId='"+articleid+"', passWd='"+passwd+"';";
+		sql = "INSERT INTO articleReply SET regDate=NOW(), writer='"+writer+"', id='"+(id+1)+"', body='"+body+"', articleId='"+articleid+"', passWd='"+passwd+"';";
 		dbLink.executeQuery(sql);
 		
 		response.getWriter().append("<script>alert('댓글을 작성했습니다.')</script>");
@@ -356,6 +411,7 @@ public class ArticleController {
 	public void _doModifyReply(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String id = request.getParameter("id");
 		String body = request.getParameter("body");
+		String passwd = request.getParameter("passwd");
 		
 		if (id == null) {
 			response.getWriter().append("<script> alert('id를 입력해주세요.'); history.back(); </script>");
@@ -390,14 +446,37 @@ public class ArticleController {
 
 		body = body.replaceAll("\'", "\\\\'");
 		
-		String sql = "SELECT articleId FROM articleReply WHERE id='"+id+"';";
-		int articleid = dbLink.getRowIntValue(sql);
-		sql = "UPDATE articleReply SET body='"+body+"' WHERE id='"+id+"';";
-		dbLink.executeQuery(sql);
+		if (passwd == null) {
+			response.getWriter().append("<script> alert('비번을 입력해주세요.'); history.back(); </script>");
+			return;
+		}
+
+		passwd = passwd.trim();
+
+		if (passwd.length() == 0) {
+			response.getWriter().append("<script> alert('비번을 입력해주세요.'); history.back(); </script>");
+			return;
+		}
+
+		passwd = passwd.replaceAll("\'", "\\\\'");
 		
-		response.getWriter().append("<script>alert('"+id+"번 댓글을 수정했습니다.')</script>");
-		response.getWriter().append("<script>location.replace('./detail.sbs?id="+articleid+"')</script>");
-		return;
+		
+		String sql = "SELECT passWd FROM articleReply WHERE id='"+id+"';"; 
+		String correctPw = dbLink.getRowStringValue(sql);
+		if(passwd.equals(correctPw)) {
+			sql = "SELECT articleId FROM articleReply WHERE id='"+id+"';";
+			int articleid = dbLink.getRowIntValue(sql);
+			sql = "UPDATE articleReply SET body='"+body+"' WHERE id='"+id+"';";
+			dbLink.executeQuery(sql);
+			
+			response.getWriter().append("<script>alert('"+id+"번 댓글을 수정했습니다.')</script>");
+			response.getWriter().append("<script>location.replace('./detail.sbs?id="+articleid+"')</script>");
+			return;
+		}
+		else {
+			response.getWriter().append("<script>alert('비번이 틀렸습니다 ㅡㅡ.'); history.back();</script>");
+		}
+		
 	}
 	
 }

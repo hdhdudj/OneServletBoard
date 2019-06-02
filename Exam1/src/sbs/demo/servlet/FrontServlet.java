@@ -38,9 +38,6 @@ public class FrontServlet extends HttpServlet {
 			else if(funcName.equals("detail.sbs")) {
 				controller._detail(request, response);
 			}
-			else if(funcName.equals("doModifyReply.sbs")) {
-				controller._doModifyReply(request,response);
-			}
 			
 			controller.dbLink.close();
 		}
@@ -75,6 +72,11 @@ public class FrontServlet extends HttpServlet {
 			else if(funcName.equals("doDeleteReply.sbs")) {
 				controller._doDeleteReply(request,response);
 			}
+			else if(funcName.equals("doModifyReply.sbs")) {
+				controller._doModifyReply(request,response);
+			}
+			
+			controller.dbLink.close();
 		}
 	}
 }

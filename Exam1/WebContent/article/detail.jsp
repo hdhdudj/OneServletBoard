@@ -66,13 +66,6 @@
 	function onclickDelete1() {
 		$('.popup,.popup-bg').css('display', 'block');
 	}
-	function enableEditModepw(el){
-		var el = String(el);
-		var el2 = '.popup-modify.';
-		var el3 = el2.concat(el);
-		$(el3).css('display', 'block');
-		$('.popup-bg').css('display', 'block');
-	}
 	function onclickDelete(el) {
 		var el = String(el);
 		var el2 = '.popup-reply.';
@@ -118,6 +111,8 @@
 			<th>날짜</th>
 			<td><%=article.get("regDate").toString().substring(0, 19)%></td>
 		</tr>
+			<th>글쓴이</th>
+			<td><%=article.get("writer")%></td>
 		<tr>
 			<th>제목</th>
 			<td><%=article.get("title")%></td>
@@ -127,14 +122,14 @@
 			<td><%=article.get("body")%></td>
 		</tr>
 	</table>
-	<div class="popup-bg"></div>
+	<div class="popup-bg" onclick="onclickDeleteCancel();"></div>
 	<div class="popup">
 		<form action="./doDelete.sbs" method="POST">
 			<div>
 				<%=article.get("id")%>번 글을 삭제하실?!
 			</div>
 			<div>
-				비번 : <input type="password" name="passwd">
+				비번 : <input type="password" name="passwd" placeholder="비번을 입력하세요.">
 			</div>
 			<div>
 				<input type="hidden" name="id" value="<%=article.get("id")%>">
@@ -155,6 +150,7 @@
 			<tr>
 				<th>번호</th>
 				<th>날짜</th>
+				<th>글쓴이</th>
 				<th>내용</th>
 				<th>비고</th>
 			</tr>
@@ -167,26 +163,31 @@
 			<tr>
 				<td><%=articleReply.get("id")%></td>
 				<td><%=articleReply.get("regDate").toString().substring(0, 19)%></td>
+				<td><%=articleReply.get("writer")%></td>
 				<td>
 					<div class="read-mode-visible">
 						<%=articleReply.get("body")%>
 					</div>
 					<div class="edit-mode-visible">
-						<form action="./doModifyReply.sbs">
-							<input type="hidden" name="id"
-								value="<%=articleReply.get("id")%>">
+						<form action="./doModifyReply.sbs" method="POST">
+							<div>
+								<input type="hidden" name="id" value="<%=articleReply.get("id")%>">
+							</div>	
+							<div>
+								<input type="password" name="passwd" placeholder="비번을 입력하세요.">
+							</div>	
 							<div>
 								<textarea name="body"><%=articleReply.get("body")%></textarea>
 							</div>
 							<div>
-								<input type="submit" value="댓글수정"> <input
+								<button type="submit">수정</button> <input
 									onclick="disableEditMode(this);" type="reset" value="수정취소">
 							</div>
 						</form>
 					</div>
 				</td>
 				<td><a href="javascript:;" onclick="onclickDelete(<%=articleReply.get("id")%>)">삭제</a> 
-					<a class="read-mode-visible" href="javascript:;" onclick="enableEditModepw(<%=articleReply.get("id")%>);">수정</a>
+					<a class="read-mode-visible" href="javascript:;" onclick="enableEditMode(this);">수정</a>
 				</td>
 			</tr>
 			<div class="popup-reply <%=articleReply.get("id")%>">
@@ -198,24 +199,7 @@
 						<input type="hidden" name="id" value="<%=articleReply.get("id")%>">
 					</div>
 					<div>
-						비번 : <input type="password" name="passwd">
-					</div>
-					<div>
-						<button type="submit">확인</button>
-						<input type="button" onclick="javascript:onclickDeleteCancel();" value="취소">
-					</div>
-				</form>
-			</div>
-			<div class="popup-modify <%=articleReply.get("id")%>">
-				<form action="./doReplyModify.sbs" method="POST">
-					<div>
-						<%=articleReply.get("id")%>번 댓글 수정하실?
-					</div>
-					<div>
-						<input type="hidden" name="id" value="<%=articleReply.get("id")%>">
-					</div>
-					<div>
-						비번 : <input type="password" name="passwd">
+						비번 : <input type="password" name="passwd" placeholder="비번을 입력하세요.">
 					</div>
 					<div>
 						<button type="submit">확인</button>
@@ -240,11 +224,15 @@
 		<div>
 			<input type="password" name="passwd" placeholder="비번을 입력하세욤.">
 		</div>
+		<br>
 		<div>
 			<input type="hidden" name="articleid" value="<%=article.get("id")%>">
 		</div>
 		<div>
-			<textarea type="text" name="body"></textarea>
+			<input type="text" name="writer" placeholder="글쓴이를 입력하세욤.">
+		</div>
+		<div>
+			<textarea type="text" name="body" placeholder="내용을 입력하세욤."></textarea>
 		</div>
 		<div>
 			<button type="submit">댓글작성</button>

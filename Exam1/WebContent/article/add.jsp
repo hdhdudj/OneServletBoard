@@ -12,12 +12,17 @@
 		<div>
 			<input type="password" name="passwd" placeholder="비밀번호를 입력하세요.">
 		</div>
+		<br>
+		<div>
+			<input type="text" name="writer" placeholder="글쓴이를 입력하세요.">
+		</div>
 		<div>
 			<input type="text" name="title" placeholder="제목을 입력하세요.">
 		</div>
 		<div>
 			<textarea name="body" placeholder="내용을 입력하세요."></textarea>
 		</div>
+		<br>
 		<div>
 			<button type="submit">작성</button><input type="button" onclick="javascript:history.back();" value="취소">
 		</div>

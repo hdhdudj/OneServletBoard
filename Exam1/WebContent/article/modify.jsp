@@ -25,11 +25,15 @@
 			<input type="hidden" name="id" value="<%=article.get("id")%>">
 		</div>
 		<div>
+			<input type="password" name="passwd" placeholder="비번을 입력하세요.">
+		</div>
+		<div>
 			<input type="text" name="title" value="<%=article.get("title")%>">
 		</div>
 		<div>
 			<textarea type="text" name="body"><%=article.get("body")%></textarea>
 		</div>
+		<br>
 		<div>
 			<button type="submit">수정</button>
 			<input type="reset" value="리셋"> <input type="button"

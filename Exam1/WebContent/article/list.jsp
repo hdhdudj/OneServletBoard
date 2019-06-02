@@ -76,6 +76,7 @@ h1 > a {
 			<tr>
 				<th>번호</th>
 				<th>날짜</th>
+				<th>글쓴이</th>
 				<th>제목</th>
 				<th>비고</th>
 			</tr>
@@ -88,11 +89,12 @@ h1 > a {
 			<tr>
 				<td><%=article.get("id")%></td>
 				<td><%=article.get("regDate").toString().substring(0, 19)%></td>
+				<td><%=article.get("writer")%></td>
 				<td><a href="./detail.sbs?id=<%=article.get("id")%>"><%=article.get("title")%></a></td>
 				<td><a href="javascript:;"
 					onclick="deleteOnclick(<%=article.get("id")%>);">삭제</a></td>
 			</tr>
-			<div class="popup-bg <%=article.get("id")%>"></div>
+			<div class="popup-bg <%=article.get("id")%>" onclick="deleteOnclickCancel();"></div>
 			<div class="popup <%=article.get("id")%>">
 				<nav>
 					<form action="./doDelete.sbs" method="POST">

@@ -90,7 +90,7 @@ h1 > a {
 				<td><%=article.get("id")%></td>
 				<td><%=article.get("regDate").toString().substring(0, 19)%></td>
 				<td><%=article.get("writer")%></td>
-				<td><a href="./detail.sbs?id=<%=article.get("id")%>"><%=article.get("title")%></a></td>
+				<td><a href="./detail.sbs?id=<%=article.get("id")%>"><%=article.get("title")%> (<%=article.get("replyNum")%>)</a></td>
 				<td><a href="javascript:;"
 					onclick="deleteOnclick(<%=article.get("id")%>);">삭제</a></td>
 			</tr>

@@ -19,7 +19,7 @@ public class ArticleController {
 	public String _list(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		response.getWriter().append("list 실행됨");
 
-		String sql = "SELECT * FROM article ORDER BY id DESC";
+		String sql = "SELECT a.*, COUNT(ar.articleId) AS `replyNum` FROM article AS a LEFT JOIN articleReply AS ar ON ar.articleId = a.id GROUP BY a.id ORDER BY id DESC;";
 		
 		List<Map<String, Object>> articles = dbLink.getRows(sql);
 		request.setAttribute("articles", articles);

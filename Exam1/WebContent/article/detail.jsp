@@ -11,6 +11,30 @@
 </script>
 <meta charset="UTF-8">
 <style>
+.popup-close::before, .popup-close::after {
+    content:"";
+    position:absolute;
+    top:0;
+    left:50%;
+    width:20%;
+    height:100%;
+    background-color:black;
+    transform:translateX(-50%) rotate(45deg);
+}
+
+.popup-close::after {
+    transform:translateX(-50%) rotate(-45deg);
+}
+.popup-close:hover {
+    transform:rotate(-10deg);
+}
+.popup-close {
+	float:right;
+    width:20px;
+    height:20px;
+    position:relative;
+    cursor:pointer;
+}
 body{
 	padding:20px;
 }
@@ -150,6 +174,8 @@ function writerColor(el){
 	</table>
 	<div class="popup-bg" onclick="onclickDeleteCancel();"></div>
 	<div class="popup">
+		<div class="popup-close" onclick="onclickDeleteCancel();">
+        </div>
 		<form action="./doDelete.sbs" method="POST">
 			<div>
 				<%=article.get("id")%>번 글을 삭제하실?!
@@ -230,6 +256,10 @@ function writerColor(el){
 				</td>
 			</tr>
 			<div class="popup-reply <%=articleReply.get("id")%>">
+				<div class="popupclocircle">
+						<div class="popup-close" onclick="onclickDeleteCancel();">
+        				</div>
+				</div>
 				<form action="./doDeleteReply.sbs" method="POST">
 					<div>
 						<%=articleReply.get("id")%>번 댓글 삭제하실?

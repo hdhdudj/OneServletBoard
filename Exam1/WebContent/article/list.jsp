@@ -32,6 +32,30 @@ function deleteOnclickCancel() {
 };
 </script>
 <style>
+.popup-close::before, .popup-close::after {
+    content:"";
+    position:absolute;
+    top:0;
+    left:50%;
+    width:20%;
+    height:100%;
+    background-color:black;
+    transform:translateX(-50%) rotate(45deg);
+}
+
+.popup-close::after {
+    transform:translateX(-50%) rotate(-45deg);
+}
+.popup-close:hover {
+    transform:rotate(-10deg);
+}
+.popup-close {
+	float:right;
+    width:20px;
+    height:20px;
+    position:relative;
+    cursor:pointer;
+}
 body{
 	padding-left:50px;
 	padding-bottom:50px;
@@ -61,15 +85,15 @@ body{
 .popup {
 	top: 50%;
 	left: 50%;
+	width:400px;
 	transform: translateX(-50%) translateY(-50%);
 	background-color: red;
 	border: 2px solid black;
 	position: fixed;
 	display: none;
 }
-
 div>nav>div {
-	padding: 10px;
+	padding: 30px;
 }
 h1 > a {
 	text-decoration:none;
@@ -126,6 +150,8 @@ h1 > a {
 			<div class="popup-bg <%=article.get("id")%>" onclick="deleteOnclickCancel();"></div>
 			<div class="popup <%=article.get("id")%>">
 				<nav>
+					<div class="popup-close" onclick="deleteOnclickCancel();">
+        			</div>
 					<form action="./doDelete.sbs" method="POST">
 						<div>
 							<%=article.get("id")%>번 게시물을 삭제하실?

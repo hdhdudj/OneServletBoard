@@ -71,14 +71,20 @@ public class ArticleController {
 		String body = request.getParameter("body");
 		String writer = request.getParameter("writer");
 		String passwd = request.getParameter("passwd");
+		
+		body = body.replace("\r\n","<br>");
 		 
+		writer = writer.trim();
+		writer = writer.replace(" ","");
+		
+		if (writer.equals("주인장") || writer.equals("관리자")) {
+			response.getWriter().append("<script> alert('글쓴이란에 주인장, 관리자는 쓸 수 없습니다!'); history.back(); </script>");
+			return;
+		}
 		if (writer == null) {
 			response.getWriter().append("<script> alert('글쓴이를 입력해주세요.'); history.back(); </script>");
 			return;
 		}
-
-		writer = writer.trim();
-
 		if (writer.length() == 0) {
 			response.getWriter().append("<script> alert('글쓴이를 입력해주세요.'); history.back(); </script>");
 			return;
@@ -283,6 +289,16 @@ public class ArticleController {
 		String passwd = request.getParameter("passwd");
 		String writer = request.getParameter("writer");
 		
+		body = body.replace("\r\n","<br>");
+		
+		writer = writer.trim();
+		writer = writer.replace(" ","");
+		
+		if (writer.equals("주인장") || writer.equals("관리자")) {
+			response.getWriter().append("<script> alert('글쓴이란에 주인장, 관리자는 쓸 수 없습니다!'); history.back(); </script>");
+			return;
+		}
+		
 		if (articleid == null) {
 			response.getWriter().append("<script> alert('id를 입력해주세요.'); history.back(); </script>");
 			return;
@@ -412,6 +428,8 @@ public class ArticleController {
 		String id = request.getParameter("id");
 		String body = request.getParameter("body");
 		String passwd = request.getParameter("passwd");
+		
+		body = body.replace("\r\n","<br>");
 		
 		if (id == null) {
 			response.getWriter().append("<script> alert('id를 입력해주세요.'); history.back(); </script>");

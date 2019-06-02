@@ -9,6 +9,18 @@
 	
 </script>
 <script>
+function writerColor(el){
+    if(el == '관리자' || el == '주인장'){
+    	var name = '.';
+		var name2 = name.concat(el);
+		$(name2).css('color', 'blue');
+		$(name2).css('font-family', 'D2coding');
+    	document.write(el);
+    }
+    else{
+    	document.write(el);
+    }
+}
 function deleteOnclick(el){
     var el = String(el);
     var el2 = '.';
@@ -20,14 +32,22 @@ function deleteOnclickCancel() {
 };
 </script>
 <style>
+body{
+	padding-left:50px;
+	padding-bottom:50px;
+}
 .listtable {
 	border-collapse: collapse;
 }
 
 .listtable>thead>tr>th, td {
 	padding: 10px;
+	text-align:center;
 }
-
+.articleTitle {
+	text-align:inherit;
+	padding-left: 20px;
+}
 .popup-bg {
 	position: fixed;
 	top: 0;
@@ -62,6 +82,7 @@ h1 > a {
 <body>
 	<h1><a href="./list.sbs">게시물 리스트</a></h1>
 	<%
+		String el = "";
 		List<Map<String, Object>> articles = (List<Map<String, Object>>) request.getAttribute("articles");
 	%>
 	<div>
@@ -89,8 +110,16 @@ h1 > a {
 			<tr>
 				<td><%=article.get("id")%></td>
 				<td><%=article.get("regDate").toString().substring(0, 19)%></td>
-				<td><%=article.get("writer")%></td>
-				<td><a href="./detail.sbs?id=<%=article.get("id")%>"><%=article.get("title")%> (<%=article.get("replyNum")%>)</a></td>
+				<td>
+				<%  el = (String)article.get("writer");%>
+					<div class="<%=article.get("writer")%>">
+						<script>
+							var name = '<%=el%>';
+    						writerColor(name);
+						</script>
+					</div>
+				</td>
+				<td class="articleTitle"><a href="./detail.sbs?id=<%=article.get("id")%>"><%=article.get("title")%></a> (<%=article.get("replyNum")%>)</td>
 				<td><a href="javascript:;"
 					onclick="deleteOnclick(<%=article.get("id")%>);">삭제</a></td>
 			</tr>

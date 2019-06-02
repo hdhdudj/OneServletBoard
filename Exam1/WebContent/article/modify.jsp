@@ -28,10 +28,13 @@
 			<input type="password" name="passwd" placeholder="비번을 입력하세요.">
 		</div>
 		<div>
-			<input type="text" name="title" value="<%=article.get("title")%>">
+			<input type="text" size="48" name="title" value="<%=article.get("title")%>">
 		</div>
 		<div>
-			<textarea type="text" name="body"><%=article.get("body")%></textarea>
+		<%
+			String body = ((String)(article.get("body"))).replaceAll("<br>","\r\n");
+		%>
+			<textarea type="text" cols="50" rows="10" name="body"><%=body%></textarea>
 		</div>
 		<br>
 		<div>

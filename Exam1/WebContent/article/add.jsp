@@ -3,6 +3,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+body{
+	padding:30px;
+}
+</style>
 <meta charset="UTF-8">
 <title>게시물 작성</title>
 </head>
@@ -17,10 +22,10 @@
 			<input type="text" name="writer" placeholder="글쓴이를 입력하세요.">
 		</div>
 		<div>
-			<input type="text" name="title" placeholder="제목을 입력하세요.">
+			<input type="text" maxlength="50" size="48" name="title" placeholder="제목을 입력하세요.">
 		</div>
 		<div>
-			<textarea name="body" placeholder="내용을 입력하세요."></textarea>
+			<textarea name="body" cols="50" rows="8" placeholder="내용을 입력하세요."></textarea>
 		</div>
 		<br>
 		<div>

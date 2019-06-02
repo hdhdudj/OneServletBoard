@@ -11,6 +11,9 @@
 </script>
 <meta charset="UTF-8">
 <style>
+body{
+	padding:20px;
+}
 .popup-bg {
 	position: fixed;
 	top: 0;
@@ -63,6 +66,18 @@
 }
 </style>
 <script>
+function writerColor(el){
+    if(el == '관리자' || el == '주인장'){
+    	var name = '.';
+		var name2 = name.concat(el);
+		$(name2).css('color', 'blue');
+		$(name2).css('font-family', 'D2coding');
+    	document.write(el);
+    }
+    else{
+    	document.write(el);
+    }
+}
 	function onclickDelete1() {
 		$('.popup,.popup-bg').css('display', 'block');
 	}
@@ -92,6 +107,7 @@
 </head>
 <body>
 	<%
+		String el = "";
 		Map<String, Object> article = (Map<String, Object>) request.getAttribute("article");
 		List<Map<String, Object>> articleReplies = (List<Map<String, Object>>) request
 				.getAttribute("articleReplise");
@@ -112,7 +128,17 @@
 			<td><%=article.get("regDate").toString().substring(0, 19)%></td>
 		</tr>
 			<th>글쓴이</th>
-			<td><%=article.get("writer")%></td>
+			<td>
+				<%
+					el = (String)article.get("writer");
+				%>
+				<div class="<%=article.get("writer")%>">	
+					<script>
+						var name = '<%=el%>';
+    					writerColor(name);
+					</script>
+				</div>
+			</td>
 		<tr>
 			<th>제목</th>
 			<td><%=article.get("title")%></td>
@@ -163,7 +189,17 @@
 			<tr>
 				<td><%=articleReply.get("id")%></td>
 				<td><%=articleReply.get("regDate").toString().substring(0, 19)%></td>
-				<td><%=articleReply.get("writer")%></td>
+				<td>
+					<%
+						el = (String)articleReply.get("writer");
+					%>
+					<div class="<%=articleReply.get("writer")%>">
+						<script>
+							var name = '<%=el%>';
+    						writerColor(name);
+						</script>
+					</div>
+				</td>
 				<td>
 					<div class="read-mode-visible">
 						<%=articleReply.get("body")%>
@@ -177,7 +213,10 @@
 								<input type="password" name="passwd" placeholder="비번을 입력하세요.">
 							</div>	
 							<div>
-								<textarea name="body"><%=articleReply.get("body")%></textarea>
+							<%
+								String body = ((String)articleReply.get("body")).replace("<br>","\r\n");
+							%>
+								<textarea name="body" cols="30" rows="3"><%=body %></textarea>
 							</div>
 							<div>
 								<button type="submit">수정</button> <input

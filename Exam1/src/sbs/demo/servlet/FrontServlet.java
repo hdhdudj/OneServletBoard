@@ -41,6 +41,20 @@ public class FrontServlet extends HttpServlet {
 			
 			controller.dbLink.close();
 		}
+		else if(controllerName.contentEquals("member")) { 
+			MemberController controller = new MemberController();
+			
+			controller.dbLink = DBUtil.getNewDbLink();
+			
+			if(funcName.equals("login.sbs")) {
+				controller._login(request, response);
+			}
+			else if(funcName.equals("myPage.sbs")) {
+				controller._myPage(request, response);
+			}
+			
+			controller.dbLink.close();
+		}
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -53,10 +67,11 @@ public class FrontServlet extends HttpServlet {
 		String controllerName = uriBits[2];
 		String funcName = uriBits[3];
 		
-		ArticleController controller = new ArticleController();
 		
-		controller.dbLink = DBUtil.getNewDbLink();
 		if(controllerName.contentEquals("article")) {
+			ArticleController controller = new ArticleController();
+			
+			controller.dbLink = DBUtil.getNewDbLink();
 			if(funcName.equals("doAddReply.sbs")) {
 				controller._doAddReply(request, response);
 			}
@@ -74,6 +89,17 @@ public class FrontServlet extends HttpServlet {
 			}
 			else if(funcName.equals("doModifyReply.sbs")) {
 				controller._doModifyReply(request,response);
+			}
+			
+			controller.dbLink.close();
+		}
+		else if(controllerName.contentEquals("member")) { 
+			MemberController controller = new MemberController();
+			
+			controller.dbLink = DBUtil.getNewDbLink();
+			
+			if(funcName.equals("doLogin.sbs")) {
+				controller._doLogin(request, response);
 			}
 			
 			controller.dbLink.close();
